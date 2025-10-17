@@ -5,11 +5,16 @@
 
 #include "Escola.h"
 #include "Aluno.h"
+#include "Disciplina.h"
+#include "Professor.h"
 
 int inserirAluno(Aluno** inicioAluno);
 int atualizarAluno(Aluno** inicioAluno);
-int excluirAluno(Aluno** inicioAluno);
-void listarAlunos(Aluno** inicioAluno);
+int excluirAluno(Aluno** inicioAluno, Disciplina** inicioDisciplina);
+void listarAlunos(Aluno** inicioAluno, int opcao);
+void listarAlunosPorNome(Aluno** inicioAluno);
+void listarAlunosPorSexo(Aluno** inicioAluno);
+void listarAlunosPorData(Aluno** inicioAluno);
 int menuAluno();
 
 int geraMatriculaAluno(){
@@ -18,39 +23,59 @@ int geraMatriculaAluno(){
 	return num;
 }
 
-int validarCadastroAluno(Aluno* aluno){
-	int retorno = SUCESSO_CADASTRO;
-	
-	printf("Digite o nome: ");
-    fgets(aluno->nome, 50, stdin);
-    size_t ln = strlen(aluno->nome) - 1;
-    if(aluno->nome[ln] == '\n')
-        aluno->nome[ln] = '\0';
-    
-    printf("Digite o sexo: ");
-    scanf("%c", &aluno->sexo);
-    
-    aluno->sexo = toupper(aluno->sexo);
-    if(aluno->sexo != 'M' && aluno->sexo != 'F') {
-        retorno = ERRO_CADASTRO_SEXO;
-    }else{
-	    char data[11];
-	    printf("Digite a data de nascimento: ");
-	    scanf("%s", aluno->data_nascimento.dataCompleta);
-	    getchar();
+int menuListarAluno(){
+	int opcao;
 
-	    int dataValida = validar_data(aluno->data_nascimento.dataCompleta);
-	    if(dataValida == FALSE){
-	        retorno = ERRO_DATA_INVALIDA;
-	    }else{
-		    printf("Digite o CPF: ");
-		    fgets(aluno->cpf, 15, stdin); 
-		    ln = strlen(aluno->cpf) - 1; 
-		    if(aluno->cpf[ln] == '\n')
-		        aluno->cpf[ln] = '\0';
-	    }
-    }
-	return retorno;
+	printf("#### Listagem ####\n");
+	printf("#### Digite a opção: ####\n");
+	printf("0 - Voltar para o módulo de aluno\n");
+	printf("1 - Listar Alunos\n");
+	printf("2 - Listar Alunos por Sexo\n");
+	printf("3 - Listar Alunos Ordenados por Nome\n");
+	printf("4 - Listar Alunos Ordenados por Data de Nascimento\n");
+	printf("5 - Listar Alunos Matriculados em Menos de 3 Disciplinas\n");
+	scanf("%d",&opcao);
+
+	return opcao;
+}
+
+void mainListarAluno(Aluno** inicioListaAluno){
+	int opcao;
+	int sair = FALSE;
+
+	while (!sair){
+		opcao = menuListarAluno();
+		
+		switch(opcao){
+			case 0:{
+			sair = TRUE;
+			break;
+			}
+			case 1:{
+				listarAlunos(inicioListaAluno, opcao);
+				break;
+			}
+			case 2:{
+				listarAlunosPorSexo(inicioListaAluno);
+				break;
+			}
+			case 3:{
+				listarAlunosPorNome(inicioListaAluno);
+				break;
+			}
+			case 4:{
+				listarAlunosPorData(inicioListaAluno);
+				break;
+			}
+			case 5:{
+				listarAlunos(inicioListaAluno, opcao);
+				break;
+			}
+			default:{
+				printf("opcao inválida\n");
+			}
+		}
+	}
 }
 
 int menuAluno(){
@@ -68,7 +93,7 @@ int menuAluno(){
 	return opcao;
 }
 
-void mainAluno(Aluno** inicioListaAluno){
+void mainAluno(Aluno** inicioListaAluno, Disciplina** inicioListaDisciplina){
 	int opcao, retorno;
 	int sair = FALSE;
 
@@ -95,6 +120,10 @@ void mainAluno(Aluno** inicioListaAluno){
 	      				printf("Data Inválida.\n");
 	      				break;
 	      			}
+					case ERRO_CPF_INVALIDO:{
+    					printf("CPF invalido. Digite novamente um CPF valido.\n");
+    					break;
+					}
 					default:{
 	      				printf("Erro desconhecido.\n");
 	      			}
@@ -124,6 +153,10 @@ void mainAluno(Aluno** inicioListaAluno){
 	      				printf("Não foi encontrado o aluno com a matrícula digitado.\n");
 	      				break;
 	      			}
+					case ERRO_CPF_INVALIDO:{
+    					printf("CPF invalido. Digite novamente um CPF valido.\n");
+    					break;
+					}
 	      			default:{
 	      				printf("Erro desconhecido.\n");
 	      			}
@@ -132,7 +165,7 @@ void mainAluno(Aluno** inicioListaAluno){
 	      	break;
 		  }
 	      case 3:{
-	      	retorno = excluirAluno(inicioListaAluno);
+	      	retorno = excluirAluno(inicioListaAluno, inicioListaDisciplina);
 	      	if(retorno == SUCESSO_EXCLUSAO){ 
 	      		printf("Aluno excluido com sucesso\n");
 	      	}else{
@@ -153,13 +186,53 @@ void mainAluno(Aluno** inicioListaAluno){
 	      	break;
 	      }
 	      case 4:{
-	      	listarAlunos(inicioListaAluno);
-	      	break;	
+	      	mainListarAluno(inicioListaAluno);
+			break;
 	      }
 		  default:{
 	      	printf("opcao inválida\n");
 	      }
 	  	}
+	}
+}
+
+int validarCadastroAluno(Aluno* aluno){
+	int retorno = SUCESSO_CADASTRO;
+	
+	printf("Digite o nome: ");
+    fgets(aluno->nome, 50, stdin);
+    size_t ln = strlen(aluno->nome) - 1;
+    if(aluno->nome[ln] == '\n')
+        aluno->nome[ln] = '\0';
+    
+    printf("Digite o sexo: ");
+    scanf("%c", &aluno->sexo);
+    
+    aluno->sexo = toupper(aluno->sexo);
+    if(aluno->sexo != 'M' && aluno->sexo != 'F') {
+        retorno = ERRO_CADASTRO_SEXO;
+    }else{
+	    char data[11];
+	    printf("Digite a data de nascimento: ");
+	    scanf("%s", aluno->data_nascimento.dataCompleta);
+	    getchar();
+
+	    int dataValida = validar_data(aluno->data_nascimento.dataCompleta, &aluno->data_nascimento);
+	    if(dataValida == FALSE){
+	        retorno = ERRO_DATA_INVALIDA;
+	    }else{
+		    printf("Digite o CPF: ");
+		    fgets(aluno->cpf, 15, stdin); 
+		    ln = strlen(aluno->cpf) - 1; 
+		    if(aluno->cpf[ln] == '\n')
+		        aluno->cpf[ln] = '\0';
+				if (!validarCPF(aluno->cpf)) {
+					printf("CPF inválido!\n");
+					free(aluno);
+					return ERRO_CPF_INVALIDO;
+	    	}
+    	}
+	return retorno;
 	}
 }
 
@@ -241,7 +314,25 @@ int atualizarAluno(Aluno** inicioAluno){
 	return atualizarAlunoNaLista(inicioAluno, matricula);
 }
 
-int excluirAlunoNaLista(Aluno** inicioAluno, int matricula){
+void desmatricularAluno(Disciplina* inicioDisciplina, int matricula){
+    Disciplina* DisciplinaAtual = inicioDisciplina;
+
+    while (DisciplinaAtual != NULL) {
+        for (int i = 0; i < DisciplinaAtual->qtdAlunos; i++) {
+            if (DisciplinaAtual->matriculaAluno[i] == matricula) {
+                for (int j = i; j < DisciplinaAtual->qtdAlunos - 1; j++) {
+                    DisciplinaAtual->matriculaAluno[j] = DisciplinaAtual->matriculaAluno[j + 1];
+                }
+
+                DisciplinaAtual->qtdAlunos--;
+            }
+        }
+
+        DisciplinaAtual = DisciplinaAtual->prox;
+    }
+}
+
+int excluirAlunoNaLista(Aluno** inicioAluno, Disciplina** inicioDisciplina, int matricula){
 	if(*inicioAluno == NULL)
 		return LISTA_VAZIA;
 
@@ -267,26 +358,28 @@ int excluirAlunoNaLista(Aluno** inicioAluno, int matricula){
 		else
 			anterior->prox = atual->prox;
 		free(atual);
+
+		desmatricularAluno(*inicioDisciplina, matricula);
+
 		return SUCESSO_EXCLUSAO;
 	}else
 		return NAO_ENCONTRADO;
 }
 
-int excluirAluno(Aluno** inicioAluno){
+int excluirAluno(Aluno** inicioAluno, Disciplina** inicioDisciplina){
 	int matricula;
 	printf("Digite a matrícula: ");    
     scanf("%d", &matricula);
     getchar();
 
-	return excluirAlunoNaLista(inicioAluno, matricula);
+	return excluirAlunoNaLista(inicioAluno, inicioDisciplina, matricula);
 }
 
-void listarAlunos(Aluno** inicioAluno){
-    int i;
+void listarAlunos(Aluno** inicioAluno, int opcao){
     Aluno* alunoAtual = *inicioAluno;
     if(*inicioAluno == NULL){
         printf("Lista Vazia\n");
-    }else{
+    }else if(opcao == 1 || (opcao == 5 && alunoAtual->qtdDisciplinas < 3)){
     	printf("\n### Alunos Cadastrados ####\n");
         do{
             printf("-----\n");
@@ -297,9 +390,175 @@ void listarAlunos(Aluno** inicioAluno){
             printf("CPF: %s\n", alunoAtual->cpf);
             
             alunoAtual = alunoAtual->prox;
-        }while (alunoAtual != NULL);
-    }    
+        }while (alunoAtual != NULL); 
+    	printf("-----\n\n");
+	}else if(opcao == 5){
+		printf("Nenhum aluno está matriculado em menos de 3 disciplinas.\n");
+	}
+}
+
+void listarAlunosPorSexo(Aluno** inicioAluno){
+    if(*inicioAluno == NULL){
+        printf("Lista Vazia\n");
+        return;
+    }
+
+    char sexoFiltro;
+    printf("Digite o sexo para filtrar (M/F): ");
+    scanf(" %c", &sexoFiltro);
+    sexoFiltro = toupper(sexoFiltro);
+
+    if(sexoFiltro != 'M' && sexoFiltro != 'F'){
+        printf("Sexo inválido! Digite 'M' ou 'F'.\n");
+        return;
+    }
+
+    int contador = 0;
+    Aluno* atual = *inicioAluno;
+	while(atual != NULL){
+		if(atual->sexo == sexoFiltro){
+			contador++;
+		}
+		atual = atual->prox;
+	}
+
+	if(contador == 0){
+		printf("Nenhum aluno encontrado para o sexo informado.\n");
+		return;
+	}
+
+    Aluno** vetor = (Aluno**) malloc(contador * sizeof(Aluno*));
+    atual = *inicioAluno;
+    int i = 0;
+
+	while(atual != NULL){
+		if(atual->sexo == sexoFiltro){
+			vetor[i] = atual;
+			i++;
+		}
+		atual = atual->prox;
+	}
+
+
+	for(int x = 0; x < contador - 1; x++){
+		for(int y = x + 1; y < contador; y++){
+			if(strcasecmp(vetor[x]->nome, vetor[y]->nome) > 0){
+				Aluno* temp = vetor[x];
+				vetor[x] = vetor[y];
+				vetor[y] = temp;
+			}
+		}
+	}
+
+    printf("\n### Alunos Cadastrados do Sexo %s (em Ordem Alfabética) ###\n", sexoFiltro == 'M' 
+			? "Masculino" : "Feminino");
+
+	for(int j = 0; j < contador; j++){
+		printf("-----\n");
+		printf("Matrícula: %d\n", vetor[j]->matricula);
+		printf("Nome: %s\n", vetor[j]->nome);
+		printf("Sexo: %c\n", vetor[j]->sexo);
+		printf("Data Nascimento: %s\n", vetor[j]->data_nascimento.dataCompleta);
+		printf("CPF: %s\n", vetor[j]->cpf);
+	}
     printf("-----\n\n");
+
+	free(vetor);
+}
+
+void listarAlunosPorNome(Aluno** inicioAluno){
+    if(*inicioAluno == NULL){
+        printf("Lista Vazia\n");
+        return;
+    }
+
+    int contador = 0;
+    Aluno* atual = *inicioAluno;
+    while(atual != NULL){
+        contador++;
+        atual = atual->prox;
+    }
+
+
+    Aluno** vetor = (Aluno**) malloc(contador * sizeof(Aluno*));
+    atual = *inicioAluno;
+    int i = 0;
+
+    while(atual != NULL){
+        vetor[i] = atual;
+        i++;
+        atual = atual->prox;
+    }
+
+    for(int x = 0; x < contador - 1; x++){
+        for (int y = x + 1; y < contador; y++) {
+            if (strcasecmp(vetor[x]->nome, vetor[y]->nome) > 0) {
+                Aluno* temp = vetor[x];
+                vetor[x] = vetor[y];
+                vetor[y] = temp;
+            }
+        }
+    }
+
+    printf("\n### Alunos Cadastrados (em Ordem Alfabética) ###\n");
+    for (int j = 0; j < contador; j++) {
+		printf("-----\n");
+        printf("Matrícula: %d\n", vetor[j]->matricula);
+        printf("Nome: %s\n", vetor[j]->nome);
+        printf("Sexo: %c\n", vetor[j]->sexo);
+        printf("Data Nascimento: %s\n", vetor[j]->data_nascimento.dataCompleta);
+        printf("CPF: %s\n", vetor[j]->cpf);
+    }
+	printf("-----\n\n");
+
+    free(vetor);
+}
+
+void listarAlunosPorData(Aluno** inicioAluno){
+	if(*inicioAluno == NULL){
+		printf("Lista Vazia\n");
+		return;
+	}
+
+	int contador = 0;
+	Aluno* atual = *inicioAluno;
+	while(atual != NULL){
+		contador++;
+		atual = atual->prox;
+	}
+
+	Aluno** vetor = (Aluno**) malloc(contador * sizeof(Aluno*));
+	atual = *inicioAluno;
+	int i = 0;
+
+	while(atual != NULL){
+		vetor[i] = atual;
+		i++;
+		atual = atual->prox;
+	}
+
+	for(int x = 0; x < contador - 1; x++){
+		for(int y = x + 1; y < contador; y++){
+			if(compararDatas(&vetor[x]->data_nascimento, &vetor[y]->data_nascimento) > 0){
+				Aluno* temp = vetor[x];
+				vetor[x] = vetor[y];
+				vetor[y] = temp;
+			}
+		}
+	}
+
+	printf("\n### Alunos Cadastrados (em Ordem de Data de Nascimento) ###\n");
+	for (int j = 0; j < contador; j++) {
+		printf("-----\n");
+		printf("Matrícula: %d\n", vetor[j]->matricula);
+		printf("Nome: %s\n", vetor[j]->nome);
+		printf("Sexo: %c\n", vetor[j]->sexo);
+		printf("Data Nascimento: %s\n", vetor[j]->data_nascimento.dataCompleta);
+		printf("CPF: %s\n", vetor[j]->cpf);
+	}
+	printf("-----\n\n");
+		
+	free(vetor);
 }
 
 void liberarListaAluno(Aluno* inicioAluno){
