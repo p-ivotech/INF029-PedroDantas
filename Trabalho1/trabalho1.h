@@ -20,8 +20,8 @@
 
 // #################################################
 
-#ifndef PEDRODANTAS20251160046_H
-#define PEDRODANTAS20251160046_H
+#ifndef trabalho1_H
+#define trabalho1_H
 
 typedef struct DQ {
     int iDia;
@@ -50,4 +50,4 @@ int q7(char matriz[8][10], char palavra[5]);
 
 DataQuebrada quebraData(char data[]);
 
-#endif // PEDRODANTAS20251160046_H
+#endif // TRABALHO1_H
