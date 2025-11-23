@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "PedroDantas20251160046.h"
+#include "trabalho1.h"
 
 static int ehBissexto(int ano) {
     return (ano % 400 == 0) || ((ano % 4 == 0) && (ano % 100 != 0));
@@ -26,7 +26,6 @@ static int compararCharIgnoreCase(char a, char b) {
     return tolower((unsigned char)a) == tolower((unsigned char)b);
 }
 
-// -------------------- funções de teste --------------------
 int somar(int x, int y) { return x + y; }
 int fatorial(int x) {
     int i, fat = 1;
@@ -34,7 +33,6 @@ int fatorial(int x) {
     return fat;
 }
 
-// -------------------- Q1 --------------------
 int q1(char data[]) {
     DataQuebrada dq = quebraData(data);
     if (!dq.valido) return 0;
