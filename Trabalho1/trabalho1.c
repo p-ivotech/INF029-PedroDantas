@@ -5,11 +5,11 @@
 #include <ctype.h>
 #include "trabalho1.h"
 
-static int ehBissexto(int ano) {
+int ehBissexto(int ano) {
     return (ano % 400 == 0) || ((ano % 4 == 0) && (ano % 100 != 0));
 }
 
-static int validarAno(int ano) {
+int validarAno(int ano) {
     if (ano < 100) ano += 2000;
     return ano;
 }
@@ -20,10 +20,6 @@ int diasNoMes(int mes, int ano) {
     int dias[13] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
     if (mes == 2 && ehBissexto(ano)) return 29;
     return dias[mes];
-}
-
-static int compararCharIgnoreCase(char a, char b) {
-    return tolower((unsigned char)a) == tolower((unsigned char)b);
 }
 
 int somar(int x, int y) { return x + y; }
