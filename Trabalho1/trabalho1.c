@@ -253,3 +253,4 @@ DataQuebrada quebraData(char data[]) {
     dq.valido = 1;
     return dq;
 }
+
