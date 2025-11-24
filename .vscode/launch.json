@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": ".",
-      "program": "build/Debug/outDebug",
+      "cwd": "c:/C/Projetos/ProjetoEscola/INF029-PedroDantas/trabalho12",
+      "program": "c:/C/Projetos/ProjetoEscola/INF029-PedroDantas/trabalho12/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
