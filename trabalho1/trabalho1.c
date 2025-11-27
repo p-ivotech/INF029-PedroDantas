@@ -73,17 +73,21 @@ DiasMesesAnos q2(char datainicial[], char datafinal[]) {
 }
 
 
-int q3(char *texto, char c, int isCaseSensitive) {
-    if (!texto) return 0;
+int q3(char texto[], char c, int isCaseSensitive) {
     int cont = 0;
     for (int i = 0; texto[i] != '\0'; i++) {
         if (isCaseSensitive) {
-            if (texto[i] == c) cont++;
+            if (texto[i] == c) {
+                cont++;
+            }
         } else {
-            if (tolower((unsigned char)texto[i]) == tolower((unsigned char)c)) cont++;
+
+            if (tolower(texto[i]) == tolower(c)) {
+                cont++;
+            }
         }
     }
-    return cont;
+return cont;
 }
 
 int tamanho(char v[]) {
