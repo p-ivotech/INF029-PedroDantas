@@ -73,41 +73,66 @@ DiasMesesAnos q2(char datainicial[], char datafinal[]) {
 }
 
 
-int q3(char *texto, char c, int isCaseSensitive) {
-    if (!texto) return 0;
+int q3(char texto[], char c, int isCaseSensitive) {
     int cont = 0;
     for (int i = 0; texto[i] != '\0'; i++) {
         if (isCaseSensitive) {
-            if (texto[i] == c) cont++;
+            if (texto[i] == c) {
+                cont++;
+            }
         } else {
-            if (tolower((unsigned char)texto[i]) == tolower((unsigned char)c)) cont++;
+
+            if (tolower(texto[i]) == tolower(c)) {
+                cont++;
+            }
         }
     }
-    return cont;
+return cont;
 }
 
-int q4(char *strTexto, char *strBusca, int posicoes[30]) {
-    if (!strTexto || !strBusca || !posicoes) return 0;
-    int tamT = strlen(strTexto);
-    int tamB = strlen(strBusca);
+int tamanho(char v[]) {
+    int i = 0;
+    while (v[i] != '\0') {
+        i++;
+    }
+    return i;
+}
+
+int compararCharIgnoreCase(char a, char b) {
+    return tolower(a) == tolower(b);
+}
+
+int q4(char Texto[], char Busca[], int posicoes[30]) {
+
+    int tamT = strlen(Texto);
+    int tamB = strlen(Busca);
+
     if (tamB == 0 || tamT < tamB) return 0;
 
     int encontrados = 0;
+
     for (int i = 0; i <= tamT - tamB; i++) {
         int ok = 1;
+
         for (int j = 0; j < tamB; j++) {
-            if (!compararCharIgnoreCase(strTexto[i+j], strBusca[j])) { ok = 0; break; }
+            if (!compararCharIgnoreCase(Texto[i + j], Busca[j])) {
+                ok = 0;
+                break;
+            }
         }
+
         if (ok) {
-            if (encontrados*2 + 1 < 30) {
-                posicoes[encontrados*2] = i + 1; 
-                posicoes[encontrados*2 + 1] = i + tamB; 
+            if (encontrados * 2 + 1 < 30) {
+                posicoes[encontrados * 2]     = i + 1;
+                posicoes[encontrados * 2 + 1] = i + tamB;
             }
             encontrados++;
         }
     }
+
     return encontrados;
 }
+
 
 int q5(int num) {
     int negativo = 0;
