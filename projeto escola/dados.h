@@ -9,7 +9,7 @@ typedef struct {
 
 typedef struct {
     int ativo;
-    char cpf[12];
+    char cpf[14];
     char nome[100];
     char sexo;
     int matricula;

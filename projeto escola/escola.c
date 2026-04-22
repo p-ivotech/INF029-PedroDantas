@@ -247,8 +247,10 @@ int main(){
                         break;
                         }
                         case 1:{//inserir disciplina
+                            if(qtdDisciplinas < TAM){
                             inserirDisciplina(listaDisciplinas,qtdDisciplinas,listaProfessores,qtdProfessores);
                             qtdDisciplinas++;
+                            }
                         break;
                         }
                         case 2:{
@@ -293,9 +295,9 @@ int main(){
 
                         case 2:{
                             char sexo;
-                            sexo = toupper(sexo);
                             printf("Por qual sexo deseja filtrar? (M/F)");
                             scanf(" %c",&sexo);
+                            sexo = toupper(sexo);
                             listarAlunos_sexo(qtdAlunos,listaAlunos,sexo);
                         break;
                         }
@@ -305,9 +307,9 @@ int main(){
                         }
                         case 4:{
                             char sexo;
-                            sexo = toupper(sexo);
                             printf("Por qual sexo deseja filtrar? (M/F)");
                             scanf(" %c",&sexo);
+                            sexo = toupper(sexo);
                             listarProfessores_sexo(qtdProfessores,listaProfessores,sexo);
                         break;
                         }

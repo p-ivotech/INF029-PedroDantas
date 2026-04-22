@@ -156,90 +156,71 @@ int validaData(int dia, int mes, int ano){
         }
     break;
     }
+return 0;
 }
 
-int validaNumerosCPF(int qtdAlunos,Dados listaAlunos[]){
-    if (strlen(listaAlunos[qtdAlunos].cpf) != 11){
+int validaCPF(char cpf[]) {
+    
+    if (strlen(cpf) != 11) {
         return 1;
     }
-    for (int i = 0; i < 11;i++){
-        if(listaAlunos[qtdAlunos].cpf[i] < '0' || listaAlunos[qtdAlunos].cpf[i] > '9'){
+
+    for (int i = 0; i < 11; i++) {
+        if (cpf[i] < '0' || cpf[i] > '9') {
             return 1;
         }
     }
 
-    for (int i = 0; i < qtdAlunos;i++){
-        if(listaAlunos[i].cpf[i] == listaAlunos[i+1].cpf[i]){
-            return 1;
+    int iguais = 1;
+    for (int i = 1; i < 11; i++) {
+        if (cpf[i] != cpf[0]) {
+            iguais = 0;
+            break;
         }
+    }
+    if (iguais) {
+        return 1;
+    }
+
+
+    int dig[11];
+    for (int i = 0; i < 11; i++) {
+        dig[i] = cpf[i] - '0';
+    }
+
+    int soma = 0;
+    for (int i = 0; i < 9; i++) {
+        soma += dig[i] * (10 - i);
+    }
+
+    int resto = soma % 11;
+    int dv1 = (resto < 2) ? 0 : (11 - resto);
+
+    if (dig[9] != dv1) {
+        return 1;
+    }
+
+    soma = 0;
+    for (int i = 0; i < 10; i++) {
+        soma += dig[i] * (11 - i);
+    }
+
+    resto = soma % 11;
+    int dv2 = (resto < 2) ? 0 : (11 - resto);
+
+    if (dig[10] != dv2) {
+        return 1;
     }
 
     return 0;
 }
 
-int validaCPF(int qtdAlunos,Dados listaAlunos[]){
-    
-    int dig[11]; 
-    for (int i = 0; i < 11;i++){
-        dig[i] = listaAlunos[qtdAlunos].cpf[i] - '0';
-    }
-    
-    for (int i = 0; i < 11;i++){
-        if(dig[i] == dig[i+1]){
+int CPFexistente(int qtdAlunos, Dados listaAlunos[], char cpf[]){
+    for (int i = 0; i < qtdAlunos; i++) {
+        if (listaAlunos[i].ativo == 1 &&
+            strcmp(listaAlunos[i].cpf, cpf) == 0) {
             return 1;
         }
     }
-    
-    int resultado[8];
-    int soma = 0;
-    for(int i = 0; i < 9;i++){
-        int j = 10 - i;
-        for (int k = i; k < 9;k++){
-            resultado[k] = dig[i] * j;
-        }
-    soma = resultado[i] + soma;
-    }
-    
-    int verificador1 = soma%11;
-    
-    
-    if (verificador1 <= 1){
-        if(dig[9] != 0){
-            return 1;
-        }
-    }
-    
-    if (verificador1 > 2){
-        if (dig[9] != (11-(verificador1))){
-            return 1;
-        }
-    }
-    
-    int resultado2[9];
-    int soma2 = 0;
-    for(int i = 0; i < 10;i++){
-        int j = 11 - i;
-        for (int k = i; k < 10;k++){
-            resultado2[k] = dig[i] * j;
-        }
-    soma2 = resultado2[i] + soma2;
-    }
-    
-    int verificador2 = soma2%11;
-    
-    if (verificador2 <= 1){
-        if(dig[10] != 0){
-            return 1;
-        }
-    } 
-    
-    if (verificador2 >= 2){
-        if (dig[10] != (11-(verificador2))){
-            return 1;
-        }
-    }
-    
-    
-    return 0;
-    
+return 0;
 }

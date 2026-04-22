@@ -14,8 +14,8 @@ int validaSexo(char sexo);
 int validaDiaMesANo(int dia, int mes, int ano);
 int validaData(int dia, int mes, int ano);
 int validaBissexto(int ano);
-int validaCPF(int qtdAlunos,Dados listaAlunos[]);
-int validaNumerosCPF(int qtdAlunos,Dados listaAlunos[]);
+int validaCPF(char cpf[]);
+int CPFexistente(int qtdAlunos, Dados listaAlunos[], char cpf[]);
 void limparBuffer();
 
 #endif

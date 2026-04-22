@@ -29,8 +29,8 @@ void inserirProfessor(Dados listaProfessores[],int qtdProfessores){
     while (1) {
         printf("\nDigite o CPF do Professor: ");
         fgets(listaProfessores[qtdProfessores].cpf,12,stdin);
-        if (validaNumerosCPF(qtdProfessores,listaProfessores) == 1 || validaCPF(qtdProfessores,listaProfessores) == 1) {
-            printf("\nCPF inválido");
+        if (CPFexistente(qtdProfessores,listaProfessores,listaProfessores[qtdProfessores].cpf) == 1 || validaCPF(listaProfessores[qtdProfessores].cpf) == 1){
+            printf("CPF invalido ou ja cadastrado");
         } else {
             break;
         }
@@ -93,8 +93,8 @@ void atualizaProfessor(int indice,Dados listaProfessores[]){
     while (1) {
         printf("\nDigite o CPF do Professor: ");
         fgets(listaProfessores[indice].cpf,12,stdin);
-        if (validaNumerosCPF(indice,listaProfessores) == 1 || validaCPF(indice,listaProfessores) == 1) {
-            printf("\nCPF inválido");
+        if (CPFexistente(indice,listaProfessores,listaProfessores[indice].cpf) == 1 || validaCPF(listaProfessores[indice].cpf) == 1){
+            printf("CPF invalido ou ja cadastrado");
         } else {
             break;
         }

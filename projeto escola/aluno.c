@@ -22,15 +22,19 @@ void inserirAluno(Dados listaAlunos[],int qtdAlunos){
         }
     }
     listaAlunos[qtdAlunos].matricula = matricula;
+
     limparBuffer();
     printf("\nDigite o nome do aluno: ");
     fgets(listaAlunos[qtdAlunos].nome,100,stdin);
+
     
     while (1) {
         printf("\nDigite o CPF do aluno: ");
         fgets(listaAlunos[qtdAlunos].cpf,12,stdin);
-        if (validaNumerosCPF(qtdAlunos,listaAlunos) == 1 || validaCPF(qtdAlunos,listaAlunos) == 1) {
-            printf("\nCPF inválido");
+        printf("CPF lido: '%s'\n", listaAlunos[qtdAlunos].cpf);
+        limparBuffer();
+        if (CPFexistente(qtdAlunos,listaAlunos,listaAlunos[qtdAlunos].cpf) == 1 || validaCPF(listaAlunos[qtdAlunos].cpf) == 1){
+            printf("CPF invalido ou ja cadastrado");
         } else {
             break;
         }
@@ -93,8 +97,10 @@ void atualizaAluno(int indice,Dados listaAlunos[]){
     while (1) {
         printf("\nDigite o CPF do aluno: ");
         fgets(listaAlunos[indice].cpf,12,stdin);
-        if (validaNumerosCPF(indice,listaAlunos) == 1 || validaCPF(indice,listaAlunos) == 1) {
-            printf("\nCPF inválido");
+        printf("CPF lido: '%s'\n", listaAlunos[indice].cpf);
+        limparBuffer();
+        if (CPFexistente(indice,listaAlunos,listaAlunos[indice].cpf) == 1 || validaCPF(listaAlunos[indice].cpf) == 1){
+            printf("CPF invalido ou ja cadastrado");
         } else {
             break;
         }
