@@ -43,8 +43,8 @@ DiasMesesAnos q2(char datainicial[], char datafinal[]) {
     DataQuebrada d1 = quebraData(datainicial);
     DataQuebrada d2 = quebraData(datafinal);
 
-    if (!d1.valido) { resultado.retorno = 2; return resultado; }
-    if (!d2.valido) { resultado.retorno = 3; return resultado; }
+    if (!d1.valido || !q1(datainicial)) { resultado.retorno = 2; return resultado; }
+    if (!d2.valido || !q1(datafinal))   { resultado.retorno = 3; return resultado; }
 
         if (d1.iAno > d2.iAno || (d1.iAno == d2.iAno && d1.iMes > d2.iMes) ||
             (d1.iAno == d2.iAno && d1.iMes == d2.iMes && d1.iDia > d2.iDia)) {
@@ -103,17 +103,18 @@ int compararCharIgnoreCase(char a, char b) {
 }
 
 int q4(char Texto[], char Busca[], int posicoes[30]) {
-
     int tamT = strlen(Texto);
     int tamB = strlen(Busca);
 
     if (tamB == 0 || tamT < tamB) return 0;
 
     int encontrados = 0;
+    int posChar = 1;
 
     for (int i = 0; i <= tamT - tamB; i++) {
-        int ok = 1;
+        if ((unsigned char)Texto[i] >= 128 && (unsigned char)Texto[i] <= 191) continue;
 
+        int ok = 1;
         for (int j = 0; j < tamB; j++) {
             if (!compararCharIgnoreCase(Texto[i + j], Busca[j])) {
                 ok = 0;
@@ -122,12 +123,19 @@ int q4(char Texto[], char Busca[], int posicoes[30]) {
         }
 
         if (ok) {
+            int posFim = posChar;
+            for (int j = 1; j < tamB; j++) {
+                unsigned char c = (unsigned char)Texto[i + j];
+                if (!(c >= 128 && c <= 191)) posFim++;
+            }
             if (encontrados * 2 + 1 < 30) {
-                posicoes[encontrados * 2]     = i + 1;
-                posicoes[encontrados * 2 + 1] = i + tamB;
+                posicoes[encontrados * 2]     = posChar;
+                posicoes[encontrados * 2 + 1] = posFim;
             }
             encontrados++;
         }
+
+        posChar++;
     }
 
     return encontrados;
